@@ -1,10 +1,11 @@
+import os
 import requests
 import pandas as pd
 import firebase_admin
 from firebase_admin import credentials, firestore
 
 # Firebase Admin SDK 초기화
-cred = credentials.Certificate("path/to/serviceAccountKey.json")
+cred = credentials.Certificate(os.path.expanduser('~/serviceAccountKey.json'))
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -39,7 +40,7 @@ def fetch_scfi():
 def fetch_port_comparison():
     url = "https://www.econdb.com/widgets/top-port-comparison/data/"
     response = requests.get(url)
-    if response.status_code == 200:
+    if response.status_code == 200):
         data = response.json()
         if 'plots' in data and len(data['plots']) > 0:
             series_data = data['plots'][0]['data']
