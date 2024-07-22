@@ -21,7 +21,8 @@ jobs:
       - name: Install build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-distutils
+          sudo apt-get install -y python3-distutils python3-apt python3-pip
+          python -m pip install --upgrade setuptools
 
       - name: Install dependencies
         run: |
