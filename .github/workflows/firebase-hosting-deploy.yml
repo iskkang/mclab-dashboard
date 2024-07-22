@@ -25,7 +25,7 @@ jobs:
 
       - name: Set up Firebase service account
         run: |
-          echo "$FIREBASE_SERVICE_ACCOUNT" > "${HOME}/serviceAccountKey.json"
+          echo "$FIREBASE_SERVICE_ACCOUNT" > "${GITHUB_WORKSPACE}/serviceAccountKey.json"
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
 
