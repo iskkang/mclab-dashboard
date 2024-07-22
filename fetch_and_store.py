@@ -40,7 +40,7 @@ def fetch_scfi():
 def fetch_port_comparison():
     url = "https://www.econdb.com/widgets/top-port-comparison/data/"
     response = requests.get(url)
-    if response.status_code == 200):
+    if response.status_code == 200:
         data = response.json()
         if 'plots' in data and len(data['plots']) > 0:
             series_data = data['plots'][0]['data']
