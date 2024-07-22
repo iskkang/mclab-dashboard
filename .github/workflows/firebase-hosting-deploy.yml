@@ -29,6 +29,10 @@ jobs:
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
 
+      - name: Create config file
+        run: |
+          echo "{\"apiKey\": \"${{ secrets.FIREBASE_API_KEY }}\", \"authDomain\": \"YOUR_PROJECT_ID.firebaseapp.com\", \"projectId\": \"YOUR_PROJECT_ID\", \"storageBucket\": \"YOUR_PROJECT_ID.appspot.com\", \"messagingSenderId\": \"YOUR_MESSAGING_SENDER_ID\", \"appId\": \"YOUR_APP_ID\", \"measurementId\": \"YOUR_MEASUREMENT_ID\"}" > "${GITHUB_WORKSPACE}/public/config.json"
+
       - name: Run Python script
         run: |
           python fetch_and_store.py
