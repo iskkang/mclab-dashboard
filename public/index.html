@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Dashboard</h1>
+        <div class="row">
+            <div class="col-12" id="chart1"></div>
+            <div class="col-12" id="chart2"></div>
+            <div class="col-12" id="chart3"></div>
+        </div>
+    </div>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="module">
+        // Firebase 초기화
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBHZ09Vvi72r4yqDQitJFAeA689_D_K6Y0",
+            authDomain: "mclab-b6c1d.firebaseapp.com",
+            projectId: "mclab-b6c1d",
+            storageBucket: "mclab-b6c1d.appspot.com",
+            messagingSenderId: "967239869796",
+            appId: "1:967239869796:web:39025510c961ed572a8671",
+            measurementId: "G-C5Y9RXD0B5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        function fetchAndPlot(collectionName, elementId, title, yLabel) {
+            const collectionRef = collection(db, collectionName);
+            getDocs(collectionRef).then((querySnapshot) => {
+                const data = querySnapshot.docs.map(doc => doc.data());
+                const dates = data.map(d => new Date(d.Date));
+                const values = data.map(d => d.Value || d.TEU || d['SCFI Value'] || d['Thousand TEU']);
+
+                const trace = {
+                    x: dates,
+                    y: values,
+                    type: 'scatter'
+                };
+
+                const layout = {
+                    title: title,
+                    xaxis: { title: 'Date' },
+                    yaxis: { title: yLabel }
+                };
+
+                Plotly.newPlot(elementId, [trace], layout);
+            }).catch((error) => {
+                console.error("Error getting document:", error);
+            });
+        }
+
+        fetchAndPlot('global_exports', 'chart1', 'Global Exports (TEU by Week)', 'TEU');
+        fetchAndPlot('scfi', 'chart2', 'Shanghai Containerized Freight Index (SCFI)', 'SCFI Value');
+        fetchAndPlot('port_comparison', 'chart3', 'Top Port Comparison', 'Thousand TEU');
+    </script>
+</body>
+</html>
