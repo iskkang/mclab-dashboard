@@ -11,10 +11,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3  # 최신 버전으로 업데이트
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4  # 최신 버전으로 업데이트
         with:
           python-version: '3.x'
 
@@ -23,12 +23,22 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Set up Firebase service account
+        run: |
+          echo "$FIREBASE_SERVICE_ACCOUNT" > ${HOME}/serviceAccountKey.json
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
       - name: Run Python script
         run: |
           python fetch_and_store.py
+
+      - name: Install Firebase CLI
+        run: |
+          curl -sL https://firebase.tools | bash
 
       - name: Deploy to Firebase
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
-          firebase deploy --only hosting
+          firebase deploy --only hosting --token "$FIREBASE_TOKEN"
